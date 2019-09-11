@@ -1,0 +1,73 @@
+@import "../../styles";
+
+.schema-tree-mat-card {
+  ::ng-deep .mat-card {
+    padding: 0;
+  }
+
+  .schema-tree-visualizer {
+    padding: 24px;
+
+    .schema-tree {
+      margin-top: 0;
+    }
+  }
+
+  .selected-node-path {
+    font-style: italic;
+    color: gray;
+  }
+
+  .selected-node-bar {
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #e9e9e9;
+  }
+}
+
+.copy-path {
+  margin: auto;
+}
+
+.toolbar-buttons {
+  margin-left: 15px;
+  margin-top: auto;
+  margin-bottom: auto;
+
+  form {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  button {
+    margin-left: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .help-button {
+    margin-top: -6px;
+    margin-left: 0;
+  }
+}
+
+.search-results {
+  position: absolute;
+  top: 90px;
+  right: 10px;
+  min-width: 40%;
+  max-height: 40%;
+  overflow: auto;
+  background: #ffffff;
+
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, .12);
+
+  ::ng-deep .mat-list-item-content {
+    justify-content: flex-end;
+  }
+
+  mat-list-item:hover {
+    background: map_get($md-avro, 100);
+    cursor: pointer;
+  }
+}

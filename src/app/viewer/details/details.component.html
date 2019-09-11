@@ -1,0 +1,55 @@
+<div class="schema-element-details" *ngIf="selectedSchema">
+
+  <!-- Chips -->
+  <div class="chips-min-height">
+    <div *ngIf="!selectedSchema.hasDefault || isNullable" fxLayout="row">
+      <span fxFlex></span>
+      <mat-chip-list class="latest-version">
+        <mat-chip *ngIf="!selectedSchema.hasDefault"
+                  color="primary"
+                  selected>Required
+        </mat-chip>
+
+        <mat-chip *ngIf="isNullable"
+                  color="accent"
+                  selected>Nullable
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+
+  <!-- Schema properties -->
+  <div class="max-height-scrollable">
+    <div *ngIf="name">
+      <h5>Name</h5>
+      <mat-divider [inset]="true"></mat-divider>
+      <p>{{name}}</p>
+    </div>
+
+    <div>
+      <h5>Type</h5>
+      <mat-divider [inset]="true"></mat-divider>
+      <p>{{schemaType}}</p>
+    </div>
+
+    <div *ngIf="selectedSchema.hasDefault">
+      <h5>Default value</h5>
+      <mat-divider [inset]="true"></mat-divider>
+      <p>{{selectedSchema.defaultValue}}</p>
+    </div>
+
+    <div *ngIf="selectedSchema.doc">
+      <h5>Description</h5>
+      <mat-divider [inset]="true"></mat-divider>
+      <p class="respect-newlines">{{selectedSchema.doc}}</p>
+    </div>
+
+    <div *ngIf="symbols">
+      <h5>Symbols</h5>
+      <mat-divider [inset]="true"></mat-divider>
+      <ul class="multi-column-list">
+        <li *ngFor="let symbol of symbols" class="symbol-italic">{{symbol}}</li>
+      </ul>
+    </div>
+  </div>
+</div>

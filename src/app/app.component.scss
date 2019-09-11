@@ -1,0 +1,34 @@
+:host {
+  display: flex;
+  flex: 1;
+}
+
+::ng-deep mat-icon.avatar {
+  overflow: hidden;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 12px;
+}
+
+.top-logo {
+  height: 100%;
+  padding-right: .4em;
+}
+
+.mat-icon-margin {
+  margin: auto;
+}
+
+.latest-version {
+  padding-left: 30px;
+
+  mat-chip {
+    cursor: pointer;
+  }
+}
+
+// Maxheight is 100 viewport-height min 64px header
+.calculated-height {
+  max-height: calc(100vh - 64px);
+}

@@ -1,0 +1,46 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+// Generated from http://mcg.mbitson.com
+$md-avro: (
+  50 : #e6eaee,
+  100 : #c1cbd5,
+  200 : #98a9ba,
+  300 : #6f869e,
+  400 : #506c89,
+  500 : #315274,
+  600 : #2c4b6c,
+  700 : #254161,
+  800 : #1f3857,
+  900 : #132844,
+  A100 : #80b2ff,
+  A200 : #4d94ff,
+  A400 : #1a75ff,
+  A700 : #0165ff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #ffffff,
+    A700 : #ffffff,
+  )
+);
+
+$my-app-primary: mat-palette($md-avro);
+$my-app-accent: mat-palette($mat-blue-grey, 500, 900, A100);
+$my-app-warn: mat-palette($mat-deep-orange);
+$my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+
+@include angular-material-theme($my-app-theme);
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');

@@ -1,0 +1,48 @@
+<div fxLayout="column" fxFlexFill>
+  <!-- Navigation menu -->
+  <mat-toolbar color="primary" fxFlex="0 1 auto">
+    <mat-toolbar-row>
+      <img class="top-logo" src="./assets/visuals/avro-white.png">
+      <span><b>Schema Viewer</b></span>
+
+      <!-- Filler that pushes the menu button to the end of the toolbar -->
+      <span fxFlex></span>
+
+      <button mat-button
+              [matMenuTriggerFor]="versionsMenu"
+              #latestVersionMenuTrigger="matMenuTrigger"
+      >
+        <span fxFlex
+              fxLayout="row">
+          {{version}}
+          <span fxFlex></span>
+          <mat-icon class="mat-icon-margin">arrow_drop_down</mat-icon>
+        </span>
+      </button>
+
+      <mat-menu #versionsMenu="matMenu"
+                yPosition="below"
+                [overlapTrigger]="false">
+        <button *ngFor="let v of versions"
+                (click)="selectVersion(v)"
+                fxLayoutAlign="left center"
+                mat-menu-item>
+          {{v}}
+          <span fxFlex></span>
+          <mat-chip-list *ngIf="latestVersion !== undefined && v === latestVersion"
+                         class="latest-version">
+            <mat-chip color="accent"
+                      (click)="selectVersion(v)"
+                      selected>latest
+            </mat-chip>
+          </mat-chip-list>
+        </button>
+      </mat-menu>
+
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="content calculated-height" fxLayoutAlign="column" fxFlex>
+    <router-outlet></router-outlet>
+  </div>
+</div>

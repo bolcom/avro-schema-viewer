@@ -1,0 +1,61 @@
+{
+  "expression": "assets\/avsc\/1.25\/schema.avsc",
+  "method": "GET",
+  "name": "1.25",
+  "isArray": false,
+  "responses": {
+    "successful": {
+      "status": 200,
+      "default": true,
+      "data": {
+        "namespace": "com.bol.avro",
+        "type": "record",
+        "name": "BolRecord",
+        "fields": [
+          {
+            "name": "employeeId",
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "type": "string"
+          },
+          {
+            "name": "listCount",
+            "type": "int"
+          },
+          {
+            "name": "accountType",
+            "type": [
+              "null",
+              "int",
+              "string",
+              {
+                "type": "enum",
+                "name": "AccountType",
+                "doc": "Different account types.",
+                "symbols": [
+                  "ANONYMOUS",
+                  "NOT_VERY_ANONYMOUS",
+                  "SUPERUSER"
+                ]
+              },
+              {
+                "type": "enum",
+                "name": "FruitType",
+                "doc": "Fruit types",
+                "symbols": [
+                  "Banana",
+                  "Apple",
+                  "Kiwi"
+                ]
+              }
+            ],
+            "doc": "The account type.",
+            "default": null
+          }
+        ]
+      }
+    }
+  }
+}

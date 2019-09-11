@@ -1,0 +1,36 @@
+.schema-element-details {
+  height: calc(100% - 10px);
+  h5 {
+    margin-block-start: 2em;
+    margin-block-end: 5px;
+  }
+
+  .multi-column-list {
+    column-count: 2;
+    list-style-type: none;
+    padding-left: 0;
+
+    .symbol-italic {
+      font-style: italic;
+    }
+  }
+
+
+}
+
+.max-height-scrollable {
+  margin-top: 10px;
+  overflow: auto;
+  // padding mat-card 48px (2 * 24px) +
+  // required container 32px
+  // margin 10px
+  max-height: calc(100% - 90px);
+}
+
+.respect-newlines {
+  white-space: pre-line;
+}
+
+.chips-min-height {
+  min-height: 40px;
+}

@@ -1,0 +1,25 @@
+<div mat-dialog-content fxFlexFill fxLayout="column">
+  <div>
+    <h1 mat-dialog-title>Help</h1>
+    <span fxFlex></span>
+    <button mat-icon-button
+            mat-dialog-close
+            class="close-help-modal"
+            color="primary">
+      <mat-icon matListAvatar svgIcon="close"></mat-icon>
+    </button>
+  </div>
+  <svg fxFlex #svg></svg>
+  <div fxLayout="row">
+    <span fxFlex></span>
+    <div fxLayout="row" fxLayoutAlign="right center">
+      <h5>Questions / Issues? Please see our</h5>
+      <a class="github-icon-href"
+         href="https://github.com/bolcom/avro-schema-viewer"
+         target="_blank">
+        <mat-icon matListAvatar svgIcon="github-circle"></mat-icon>
+      </a>
+      <h5>page.</h5>
+    </div>
+  </div>
+</div>

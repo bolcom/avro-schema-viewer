@@ -1,0 +1,128 @@
+<div fxFlex="100"
+     fxLayout="row"
+     fxLayoutGap="30px"
+>
+  <!-- Schema browser -->
+  <div fxFlex="75"
+       fxLayout="column"
+       class="schema-tree-mat-card"
+  >
+    <mat-card
+      fxFlex
+      fxLayout="column wrap"
+    >
+      <div class="schema-tree-visualizer"
+           fxFlex
+           fxLayout="column wrap"
+      >
+        <div fxLayout="row">
+          <h2 class="schema-tree">Tree</h2>
+          <span fxFlex></span>
+          <div class="toolbar-buttons">
+            <button mat-stroked-button
+                    color="primary"
+                    matTooltip="Recenter"
+                    matTooltipPosition="below"
+                    (click)="visualizer.recenter()">
+              <mat-icon matListAvatar svgIcon="crosshairs-gps"></mat-icon>
+            </button>
+            <button mat-stroked-button
+                    color="primary"
+                    matTooltip="Expand all"
+                    matTooltipPosition="below"
+                    (click)="visualizer.expandAll()">
+              <mat-icon matListAvatar svgIcon="fullscreen"></mat-icon>
+            </button>
+            <button mat-stroked-button
+                    color="primary"
+                    matTooltip="Collapse all"
+                    matTooltipPosition="below"
+                    (click)="visualizer.collapseAll()">
+              <mat-icon matListAvatar svgIcon="fullscreen-exit"></mat-icon>
+            </button>
+          </div>
+          <div class="toolbar-buttons">
+            <!-- Search -->
+            <form>
+              <mat-form-field [formGroup]="searchForm">
+                <input type='text'
+                       formControlName="query"
+                       autocomplete="off"
+                       label="query"
+                       matInput
+                       placeholder="Search">
+              </mat-form-field>
+              <button *ngIf="!searchResultsVisible"
+                      mat-icon-button
+                      type="submit"
+                      (click)="onSearch()"
+                      color="primary">
+                <mat-icon matListAvatar svgIcon="magnify"></mat-icon>
+              </button>
+              <button *ngIf="searchResultsVisible"
+                      mat-icon-button
+                      (click)="onCloseSearchResults()"
+                      color="primary">
+                <mat-icon matListAvatar svgIcon="close"></mat-icon>
+              </button>
+            </form>
+
+            <!-- Search results -->
+            <div *ngIf="searchResults && searchResults.length > 0 && searchResultsVisible"
+                 class="search-results">
+              <mat-list>
+                <mat-list-item *ngFor="let query of searchResults"
+                               (click)="onSelectSearchResult(query)">{{query}}
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+          <div class="toolbar-buttons">
+            <!-- Help -->
+            <button mat-icon-button
+                    class="help-button"
+                    (click)="showHelp()"
+                    matTooltip="Show help"
+                    matTooltipPosition="below"
+                    color="primary">
+              <mat-icon matListAvatar svgIcon="help-circle-outline"></mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <app-visualizer fxFlex
+                        #visualizer
+                        (onSelectedNodePathChange)="setSelectedNodePath($event)"
+        ></app-visualizer>
+      </div>
+
+      <div class="selected-node-bar">
+        <div fxFlex
+             *ngIf="selectedSchema">
+          <h4>Path: <a class="selected-node-path">{{selectedSchemaFullpath}}</a></h4>
+          <span fxFlex></span>
+          <button class="copy-path"
+                  matTooltip="Copy to clipboard"
+                  matTooltipPosition="right"
+                  mat-icon-button
+                  ngxClipboard
+                  [cbContent]="selectedSchemaFullpath"
+                  (click)="showCopiedMessage()">
+            <mat-icon matListAvatar svgIcon="content-copy"></mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Details -->
+  <div fxFlex="25"
+       fxLayout="row"
+       fxLayoutGap="30px"
+  >
+    <mat-card fxFlex>
+      <h2>Details</h2>
+      <app-details [selectedSchema]="selectedSchema"></app-details>
+    </mat-card>
+  </div>
+</div>

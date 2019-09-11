@@ -1,0 +1,77 @@
+{
+  "name": "avro-schema-viewer",
+  "version": "0.1.0",
+  "license": "Apache License 2.0",
+  "contributors": [
+    {
+      "name": "Robin Trietsch",
+      "email": "robin@trietsch.cc",
+      "url": "https://robin.trietsch.cc"
+    },
+    {
+      "name": "Mike Junger",
+      "email": "mlajunger@gmail.com"
+    }
+  ],
+  "scripts": {
+    "ng": "ng",
+    "start": "yarn stopall; echo \"Starting Mockserver in background - Kill using 'yarn stop-mockserver'\"; yarn mockserver:watch > /dev/null 2>&1 & echo \"Starting app in foreground - Kill using Ctrl+C or 'yarn stop-app'\"; yarn start-app",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e",
+    "start-app": "ng serve --source-map --proxy-config mockserver/proxy.conf.js",
+    "mockserver:watch": "nodemon --watch mockserver/mocks/ mockserver/server.js --port 8080",
+    "stop-app": "started=$(lsof -i :4200 | grep 'node' | awk '{print $2}' | head -n 1); if [[ ! -z \"$started\" ]]; then kill -9 \"$started\"; fi;",
+    "stop-mockserver": "mockserver=$(lsof -i :8080 | grep 'node' | awk '{print $2}' | head -n 1); if [[ ! -z \"$mockserver\" ]]; then kill -INT \"$mockserver\"; fi;",
+    "stopall": "yarn stop-app; yarn stop-mockserver",
+    "build-production": "ng build --source-map --prod --aot --progress=false --base-href ./"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^6.1.0",
+    "@angular/cdk": "^6.1.0",
+    "@angular/common": "^6.1.0",
+    "@angular/compiler": "^6.1.0",
+    "@angular/core": "^6.1.0",
+    "@angular/flex-layout": "6.0.0-beta.16",
+    "@angular/forms": "^6.1.0",
+    "@angular/http": "^6.1.0",
+    "@angular/material": "^6.1.0",
+    "@angular/platform-browser": "^6.1.0",
+    "@angular/platform-browser-dynamic": "^6.1.0",
+    "@angular/router": "^6.1.0",
+    "@mdi/font": "^3.0.39",
+    "@types/d3": "^5.7.1",
+    "@types/lodash": "^4.14.121",
+    "@types/node": "^11.13.7",
+    "core-js": "^2.5.4",
+    "d3": "^5.9.1",
+    "hammerjs": "^2.0.8",
+    "lodash": "^4.17.11",
+    "ngx-clipboard": "^12.0.0",
+    "rxjs": "~6.2.0",
+    "zone.js": "~0.8.26"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.8.0",
+    "@angular/cli": "~6.2.9",
+    "@angular/compiler-cli": "^6.1.0",
+    "@angular/language-service": "^6.1.0",
+    "@types/jasmine": "~2.8.8",
+    "@types/jasminewd2": "~2.0.3",
+    "codelyzer": "~4.3.0",
+    "jasmine-core": "~2.99.1",
+    "jasmine-spec-reporter": "~4.2.1",
+    "karma": "~3.0.0",
+    "karma-chrome-launcher": "~2.2.0",
+    "karma-coverage-istanbul-reporter": "~2.0.1",
+    "karma-jasmine": "~1.1.2",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "ng-apimock": "1.4.4",
+    "nodemon": "^1.18.2",
+    "protractor": "~5.4.0",
+    "ts-node": "~7.0.0",
+    "tslint": "~5.11.0",
+    "typescript": "~2.9.2"
+  }
+}

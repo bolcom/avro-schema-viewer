@@ -1,0 +1,17 @@
+{
+  "expression": "assets\/avsc\/versions.json",
+  "method": "GET",
+  "name": "versions",
+  "isArray": false,
+  "responses": {
+    "successful": {
+      "status": 200,
+      "default": true,
+      "data": [
+        "1.25",
+        "2.0",
+        "3.0"
+      ]
+    }
+  }
+}
