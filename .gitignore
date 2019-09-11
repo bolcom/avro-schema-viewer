@@ -8,3 +8,4 @@ mockserver/generated-mocks
 *.sh
 .settings/*
 .gitlab-ci.yml
+src/assets/avsc/*

@@ -1,0 +1,435 @@
+{
+  "name": "Drawing",
+  "namespace": "com.flowprotocol.examples.drawing",
+  "type": "record",
+  "doc": "Example datatype representing a vector graphics drawing.",
+  "fields": [
+    {
+      "name": "title",
+      "doc": "Title of the drawing.",
+      "type": "string"
+    },
+    {
+      "name": "canvasWidth",
+      "doc": "Width of the drawing area, in points (1/72 inches).",
+      "default": 595,
+      "type": "float"
+    },
+    {
+      "name": "canvasHeight",
+      "doc": "Height of the drawing area, in points (1/72 inches).",
+      "default": 842,
+      "type": "float"
+    },
+    {
+      "name": "rootObject",
+      "doc": "Tree of graphical objects. The root is typically a group, which may contain any number of other objects, or nested groups. When traversing the tree in left-to-right order, objects that appear later obscure objects that appear earlier.",
+      "type": {
+        "name": "DrawingObject",
+        "type": "record",
+        "doc": "Container for all types of graphical object that can appear in a drawing.",
+        "fields": [
+          {
+            "name": "name",
+            "doc": "Human-readable descriptive name for the object, to help the user structure the drawing. Not rendered as part of the drawing, but should be displayed in the editing UI.",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "name": "position",
+            "doc": "Position of this object's origin, in the coordinates of the parent object (if this is the root object, in the coordinates of the canvas).",
+            "type": {
+              "name": "Vector2D",
+              "type": "record",
+              "semantics": "atomic",
+              "doc": "Generic 2D vector type.",
+              "fields": [
+                {
+                  "name": "x",
+                  "doc": "Value in horizontal direction",
+                  "type": "float"
+                },
+                {
+                  "name": "y",
+                  "doc": "Value in vertical direction",
+                  "type": "float"
+                }
+              ]
+            }
+          },
+          {
+            "name": "rotation",
+            "doc": "Angle of rotation of this object around its origin, anti-clockwise, in degrees.",
+            "type": "float",
+            "default": 0.0
+          },
+          {
+            "name": "scale",
+            "doc": "Factor by which this object is scaled in horizontal (x) and vertical (y) direction, prior to any rotation.",
+            "type": "Vector2D"
+          },
+          {
+            "name": "object",
+            "doc": "The actual graphical object; union of various supported object types.",
+            "type": [
+              {
+                "name": "Line",
+                "type": "record",
+                "doc": "A straight line between two points.",
+                "fields": [
+                  {
+                    "name": "startPoint",
+                    "doc": "Position of the line's starting point, in this object's coordinates.",
+                    "type": "Vector2D"
+                  },
+                  {
+                    "name": "endPoint",
+                    "doc": "Position of the line's finishing point, in this object's coordinates.",
+                    "type": "Vector2D"
+                  },
+                  {
+                    "name": "stroke",
+                    "doc": "Appearance of the line.",
+                    "type": {
+                      "name": "Stroke",
+                      "type": "record",
+                      "doc": "Appearance of an object's line or stroke (outline).",
+                      "fields": [
+                        {
+                          "name": "width",
+                          "doc": "Line width in points (1/72 inches). Not affected by scaling factors of parent objects.",
+                          "default": 1,
+                          "type": "float"
+                        },
+                        {
+                          "name": "color",
+                          "aliases": [
+                            "colour"
+                          ],
+                          "doc": "Color in which the line should be drawn.",
+                          "type": {
+                            "name": "Color",
+                            "aliases": [
+                              "Colour"
+                            ],
+                            "type": "record",
+                            "semantics": "atomic",
+                            "doc": "A color in the RGB system, with alpha channel, non-premultiplied.",
+                            "fields": [
+                              {
+                                "name": "red",
+                                "doc": "Red component, between 0 and 255.",
+                                "type": "int"
+                              },
+                              {
+                                "name": "green",
+                                "doc": "Green component, between 0 and 255.",
+                                "type": "int"
+                              },
+                              {
+                                "name": "blue",
+                                "doc": "Blue component, between 0 and 255.",
+                                "type": "int"
+                              },
+                              {
+                                "name": "alpha",
+                                "doc": "Transparency (0 = fully transparent, 255 = fully opaque).",
+                                "type": "int"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "style",
+                          "doc": "Solid, dashed, dotted etc.",
+                          "default": "SOLID",
+                          "type": {
+                            "name": "LineStyle",
+                            "type": "enum",
+                            "doc": "A predefined set of commonly-used line styles.",
+                            "symbols": [
+                              "SOLID",
+                              "NONE",
+                              "DASHES",
+                              "DOTS",
+                              "DASH_DOT_DASH"
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "startArrow",
+                    "doc": "Arrowhead at the line's start.",
+                    "type": {
+                      "name": "Arrowhead",
+                      "type": "record",
+                      "doc": "Apperance of an arrowhead at the end of a line.",
+                      "fields": [
+                        {
+                          "name": "style",
+                          "doc": "What kind of arrowhead (if any) to draw.",
+                          "default": "NONE",
+                          "type": {
+                            "name": "ArrowStyle",
+                            "type": "enum",
+                            "doc": "A predefined set of commonly-used arrowhead styles.",
+                            "symbols": [
+                              "NONE",
+                              "LINES",
+                              "SOLID"
+                            ]
+                          }
+                        },
+                        {
+                          "name": "size",
+                          "doc": "Size of the arrowheads, in multiples of the line width.",
+                          "default": 10.0,
+                          "type": "float"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "endArrow",
+                    "doc": "Arrowhead at the line's end.",
+                    "type": "Arrowhead"
+                  }
+                ]
+              },
+              {
+                "name": "RoundedRectangle",
+                "type": "record",
+                "doc": "A rectangle, optionally with rounded corners, centered at this object's origin.",
+                "fields": [
+                  {
+                    "name": "size",
+                    "doc": "Width and height of the rectangle, in this object's coordinates.",
+                    "type": "Vector2D"
+                  },
+                  {
+                    "name": "cornerRadius",
+                    "doc": "Radius of the rounding at all four of the rectangle's corners, in this object's coordinates.",
+                    "default": 0.0,
+                    "type": "float"
+                  },
+                  {
+                    "name": "stroke",
+                    "doc": "Appearance of the outline of the rectangle.",
+                    "type": "Stroke"
+                  },
+                  {
+                    "name": "fill",
+                    "doc": "Appearance of the area fill of the rectangle. `null` if there is no fill (only the stroke is drawn).",
+                    "type": [
+                      "null",
+                      {
+                        "name": "SolidFill",
+                        "type": "record",
+                        "doc": "Specifies that the area inside an object should be filled with a single solid color.",
+                        "fields": [
+                          {
+                            "name": "color",
+                            "aliases": [
+                              "colour"
+                            ],
+                            "doc": "Color with which the object area should be filled.",
+                            "type": "Color"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "LinearGradientFill",
+                        "type": "record",
+                        "doc": "Specifies that the area inside an object should be filled with a linear gradient from one color to another color.",
+                        "fields": [
+                          {
+                            "name": "color1",
+                            "aliases": [
+                              "colour1"
+                            ],
+                            "doc": "Color at the start of the gradient.",
+                            "type": "Color"
+                          },
+                          {
+                            "name": "color2",
+                            "aliases": [
+                              "colour2"
+                            ],
+                            "doc": "Color at the end of the gradient.",
+                            "type": "Color"
+                          },
+                          {
+                            "name": "angle",
+                            "doc": "Direction of the gradient, in degrees, anti-clockwise. At zero, color1 is drawn at the left edge of the object's bounding box, and color2 is drawn at the right edge; at 90, color1 is drawn at the bottom of the object's bounding box, and color2 at the top; etc.",
+                            "type": "float"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Ellipse",
+                "type": "record",
+                "doc": "An ellipse or circle, centered at this object's origin.",
+                "fields": [
+                  {
+                    "name": "size",
+                    "doc": "Width and height of the ellipse, in this object's coordinates.",
+                    "type": "Vector2D"
+                  },
+                  {
+                    "name": "stroke",
+                    "doc": "Appearance of the outline of the ellipse.",
+                    "type": "Stroke"
+                  },
+                  {
+                    "name": "fill",
+                    "doc": "Appearance of the area fill of the ellipse. `null` if there is no fill (only the stroke is drawn).",
+                    "type": [
+                      "null",
+                      "SolidFill",
+                      "LinearGradientFill"
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Text",
+                "type": "record",
+                "doc": "Rich text (not automatically line-wrapped). The origin of the text object is the baseline of the beginning of the first character.",
+                "fields": [
+                  {
+                    "name": "fontFamily",
+                    "doc": "Name of the font in which the text should be rendered. We assume that the font is already installed on the system.",
+                    "type": "string"
+                  },
+                  {
+                    "name": "fontSize",
+                    "doc": "Font size in points.",
+                    "type": "float"
+                  },
+                  {
+                    "name": "bold",
+                    "doc": "Whether or not the bold weight of the font should be used.",
+                    "type": "boolean"
+                  },
+                  {
+                    "name": "italic",
+                    "doc": "Whether or not the italic style of the font should be used.",
+                    "type": "boolean"
+                  },
+                  {
+                    "name": "underline",
+                    "doc": "Whether or not underline decoration should be added to the font.",
+                    "type": "boolean"
+                  },
+                  {
+                    "name": "color",
+                    "aliases": [
+                      "colour"
+                    ],
+                    "doc": "Color with which the text should be rendered.",
+                    "type": "Color"
+                  },
+                  {
+                    "name": "chars",
+                    "doc": "A list of characters or font-change markers (which allow multiple text styles to be used within a single Text record).",
+                    "type": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "name": "Char",
+                          "type": "record",
+                          "doc": "Wrapper record for a single character in a Text object.",
+                          "fields": [
+                            {
+                              "name": "value",
+                              "doc": "String containing a single character. May consist of multiple Unicode codepoints if it makes sense to edit them as an atomic unit (e.g. when using combining marks).",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "FontFamilyChange",
+                          "type": "record",
+                          "doc": "Specifies a change in font family within a rich text object, for example a transition from Comic Sans to Helvetica. The value indicates the new font family, for text that follows the change.",
+                          "fields": [
+                            {
+                              "name": "newFont",
+                              "doc": "Name of the font. We assume that the font is already installed on the system.",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "FontSizeChange",
+                          "type": "record",
+                          "doc": "Specifies a change in font size within a rich text object, for example a transition from a smaller size to a larger size. The value indicates the new size, for text that follows the change.",
+                          "fields": [
+                            {
+                              "name": "newSize",
+                              "doc": "The new font size, in points.",
+                              "type": "float"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "FontAttributeChange",
+                          "type": "enum",
+                          "doc": "Specifies a change in font attributes within a rich text object, for example a transition from non-bold to bold. The enum value indicates the new attribute, for text that follows the change.",
+                          "symbols": [
+                            "BOLD",
+                            "NOT_BOLD",
+                            "ITALIC",
+                            "NOT_ITALIC",
+                            "UNDERLINE",
+                            "NOT_UNDERLINE"
+                          ]
+                        },
+                        {
+                          "name": "FontColorChange",
+                          "type": "record",
+                          "doc": "Specifies a change in text color within a rich text object, for example a transition from black to red text. The value indicates the new color, for text that follows the change.",
+                          "fields": [
+                            {
+                              "name": "color",
+                              "aliases": [
+                                "colour"
+                              ],
+                              "doc": "Color with which the text should be rendered.",
+                              "type": "Color"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "Group",
+                "type": "record",
+                "doc": "Collection of several objects that can be manipulated together. A group introduces a new coordinate system (with its origin at the object origin), and all transformations (position, rotation, scaling) to the group object apply to all child objects collectively. Groups can be nested arbitrarily.",
+                "fields": [
+                  {
+                    "name": "children",
+                    "doc": "The objects that are being grouped. Objects later in the list obscure objects earlier in the list if they overlap.",
+                    "default": [],
+                    "type": {
+                      "type": "array",
+                      "items": "DrawingObject"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
