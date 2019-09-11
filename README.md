@@ -19,6 +19,10 @@ The Avro Schema Viewer offers the following:
 **Nullable**: a schema entry is a union, with one union schema entry that is _null_
 **Required**: a schema entry does not have a default value (therefore it should be provided by the one that creates a record, hence, it's required)
 
+## Preferences
+
+In `src/app/shared/viewer.properties.ts`, some of the behavior / looks of the schema viewer can be customized.
+
 ## Viewing behavior
 The schema viewer will traverse through the schema to display it. There are some caveats that are important when viewing the schema:
 
