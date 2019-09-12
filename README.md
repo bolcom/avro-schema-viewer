@@ -16,8 +16,8 @@ The Avro Schema Viewer offers the following:
 
 ## Definitions
 
-**Nullable**: a schema entry is a union, with one union schema entry that is _null_
-**Required**: a schema entry does not have a default value (therefore it should be provided by the one that creates a record, hence, it's required)
+- **Nullable**: a schema entry is a union, with one union schema entry that is _null_
+- **Required**: a schema entry does not have a default value (therefore it should be provided by the one that creates a record, hence, it's required)
 
 ## Preferences
 
