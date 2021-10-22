@@ -1,26 +1,12 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import * as d3 from 'd3';
-import {HierarchyNode, HierarchyPointNode} from 'd3';
-import * as _ from 'lodash';
-import {SchemaService} from '../../services/schema.service';
-import {
-  ArraySchema,
-  AvroSchema,
-  AvroUtil,
-  EnumSchema,
-  ErrorUnionSchema,
-  Field,
-  FixedSchema,
-  MapSchema,
-  PrimitiveSchema,
-  RecordSchema,
-  SchemaType,
-  UnionSchema
-} from '../../models/avro-schema.model';
-import {Location} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
-import {ViewerProperties} from '../../shared/viewer.properties';
-import {Util} from '../../shared/util';
+import { HierarchyNode, HierarchyPointNode } from 'd3';
+import { SchemaService } from '../../services/schema.service';
+import { ArraySchema, AvroSchema, AvroUtil, EnumSchema, ErrorUnionSchema, Field, FixedSchema, MapSchema, PrimitiveSchema, RecordSchema, SchemaType, UnionSchema } from '../../models/avro-schema.model';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { ViewerProperties } from '../../shared/viewer.properties';
+import { Util } from '../../shared/util';
 
 @Component({
   selector: 'app-visualizer',
@@ -51,8 +37,8 @@ export class VisualizerComponent implements OnInit {
   public loading = true;
 
   constructor(private schemaService: SchemaService,
-              private location: Location,
-              private route: ActivatedRoute) {
+    private location: Location,
+    private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -89,7 +75,7 @@ export class VisualizerComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       let schemaFullPath = params.get('schemaFullPath');
 
-      if (_.isNil(schemaFullPath) // no path provided
+      if (Util.isNullOrUndefined(schemaFullPath) // no path provided
         || schemaFullPath === this.avroSchema['fullpath'] // path matches root path
         || schemaFullPath.split('.')[0] !== this.avroSchema['fullpath'] // path does not start with the root nodes path
       ) {
@@ -133,7 +119,7 @@ export class VisualizerComponent implements OnInit {
   public selectNodeByFullPath(schemaFullPath) {
     let match = AvroUtil.getAvroSchemaNodeByFullPath(schemaFullPath, this.avroSchema);
 
-    if (_.isNil(match)) {
+    if (Util.isNullOrUndefined(match)) {
       this.selectRootNode();
     } else {
       this.location.replaceState(`/viewer/${this.schemaVersion}/${schemaFullPath}`);
@@ -365,7 +351,7 @@ export class VisualizerComponent implements OnInit {
     if (node instanceof Field) {
       return this.getChildren(node.type, true);
     } else if (node instanceof RecordSchema) {
-      return _.isObject(node.type) ? node.type['fields'] : node['fields'];
+      return Util.isObject(node.type) ? node.type['fields'] : node['fields'];
     } else if (node instanceof UnionSchema || node instanceof ErrorUnionSchema) {
       // When the parent is a union and there's only one child, display it as a direct child
       let nonPrimitiveSchemas = AvroUtil.getNonPrimitiveSchemas(node.schemas);

@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { Util } from '../shared/util';
 
 export class AvroUtil {
   public static parseAvsc(json): AvroSchema {
@@ -83,7 +83,7 @@ export class AvroUtil {
       names = new Names();
     }
 
-    if (!_.isNil(jsonData['type'])) {
+    if (!Util.isNullOrUndefined(jsonData['type'])) {
       let type = jsonData['type'];
       let otherProperties = AvroUtil.getOtherProperties(jsonData, SCHEMA_RESERVED_PROPS);
 
@@ -211,7 +211,7 @@ export class AvroSchema {
       schema.fullpath = traversalPath;
       AvroSchema.assignFullpaths(schema.type, traversalPath);
     } else if (schema instanceof RecordSchema) {
-      traversalPath = _.isEmpty(traversalPath) ? schema.name : traversalPath;
+      traversalPath = traversalPath.length === 0 ? schema.name : traversalPath;
       schema.fullpath = traversalPath;
 
       if (schema.fields) {
@@ -267,7 +267,7 @@ class Names {
     if (!(test in this.names)) {
       return null;
     }
-    return _.cloneDeep(this.names[test]);
+    return Util.copyString(this.names[test]);
   }
 
   addName(nameAttr, spaceAttr, newSchema): Name {
@@ -288,15 +288,15 @@ class Name {
   fullname: string;
 
   constructor(nameAttr: string, spaceAttr: string, defaultSpace: string) {
-    if (_.isNil(nameAttr) || nameAttr === '') {
+    if (Util.isNullOrUndefined(nameAttr) || nameAttr === '') {
       return;
     }
 
     if (nameAttr.indexOf('.') < 0) {
-      if (!_.isNil(spaceAttr) && spaceAttr !== '') {
+      if (!Util.isNullOrUndefined(spaceAttr) && spaceAttr !== '') {
         this.fullname = `${spaceAttr}.${nameAttr}`;
       } else {
-        if (!_.isNil(defaultSpace) && defaultSpace !== '') {
+        if (!Util.isNullOrUndefined(defaultSpace) && defaultSpace !== '') {
           this.fullname = `${defaultSpace}.${nameAttr}`;
         } else {
           this.fullname = nameAttr;
@@ -308,7 +308,7 @@ class Name {
   }
 
   getSpace() {
-    if (_.isNil(this.fullname)) {
+    if (Util.isNullOrUndefined(this.fullname)) {
       return null;
     }
 
@@ -330,12 +330,12 @@ export class NamedSchema extends AvroSchema {
   constructor(type, name = null, namespace = null, names: Names = null, otherProperties: any = null) {
     super(type, otherProperties);
 
-    if (!_.isNil(name)) {
+    if (!Util.isNullOrUndefined(name)) {
       let newName = names.addName(name, namespace, this);
 
       this.properties['name'] = name;
 
-      if (!_.isNil(namespace)) {
+      if (!Util.isNullOrUndefined(namespace)) {
         this.properties['namespace'] = newName.getSpace();
       }
 
@@ -362,12 +362,12 @@ export class Field {
 
     let typeSchema;
 
-    if (typeof type === 'string' && !_.isNil(names) && names.hasName(type, null)) {
+    if (typeof type === 'string' && !Util.isNullOrUndefined(names) && names.hasName(type, null)) {
       typeSchema = names.getName(type, null);
     } else {
       try {
         typeSchema = AvroUtil.makeAvscObject(type, names);
-      } catch (e) {
+      } catch(e) {
         throw new SchemaParseException(`Type property "${type}" is not a valid Avro schema: ${e}`);
       }
     }
@@ -381,11 +381,11 @@ export class Field {
       this.properties['defaultValue'] = defaultValue;
       this.defaultValue = defaultValue;
     }
-    if (!_.isNil(order)) {
+    if (!Util.isNullOrUndefined(order)) {
       this.properties['order'] = order;
       this.order = order;
     }
-    if (!_.isNil(doc)) {
+    if (!Util.isNullOrUndefined(doc)) {
       this.properties['doc'] = doc;
       this.doc = doc;
     }
@@ -433,7 +433,7 @@ export class EnumSchema extends NamedSchema {
     this.properties['symbols'] = symbols;
     this.symbols = symbols;
 
-    if (!_.isNil(doc)) {
+    if (!Util.isNullOrUndefined(doc)) {
       this.properties['doc'] = doc;
       this.doc = doc;
     }
@@ -456,7 +456,7 @@ export class ArraySchema extends AvroSchema {
     } else {
       try {
         itemsSchema = AvroUtil.makeAvscObject(items, names);
-      } catch (e) {
+      } catch(e) {
         throw new SchemaParseException(`Items schema (${items}) not a valid Avro schema: ${e} (known names: ${Object.keys(names.names)})`)
       }
     }
@@ -479,7 +479,7 @@ export class MapSchema extends AvroSchema {
     } else {
       try {
         valuesSchema = AvroUtil.makeAvscObject(values, names);
-      } catch (e) {
+      } catch(e) {
         throw new SchemaParseException(`Values schema not a valid Avro schema.`)
       }
     }
@@ -509,7 +509,7 @@ export class UnionSchema extends AvroSchema {
       } else {
         try {
           newSchema = AvroUtil.makeAvscObject(schema, names);
-        } catch (e) {
+        } catch(e) {
           throw new SchemaParseException(`Union item must be a valid Avro schema: ${e}`);
         }
       }
@@ -558,7 +558,7 @@ export class RecordSchema extends NamedSchema {
     this.fields = fieldObjects;
     this.name = name;
 
-    if (!_.isNil(doc)) {
+    if (!Util.isNullOrUndefined(doc)) {
       this.properties['doc'] = doc;
       this.doc = doc;
     }
@@ -575,20 +575,20 @@ export class RecordSchema extends NamedSchema {
     fieldData.forEach(field => {
       let newField;
 
-      if (_.isObject(field)) {
+      if (Util.isObject(field)) {
         const type = field['type'];
         const name = field['name'];
 
         let hasDefault = Object.keys(field).includes('default');
         let defaultValue = undefined;
 
-        if (hasDefault && _.isNil(field['default'])) {
+        if (hasDefault && Util.isNullOrUndefined(field['default'])) {
           // Default value of 'null'
           defaultValue = 'null';
         } else if (hasDefault && Array.isArray(field['default'])) {
           // Default value of 'for arrays'
           defaultValue = '[ ] - empty array';
-        } else if (hasDefault && _.isObjectLike(field['default'])) {
+        } else if (hasDefault && Util.isObject(field['default'])) {
           defaultValue = '{ } - empty map';
         } else {
           defaultValue = field['default'];
